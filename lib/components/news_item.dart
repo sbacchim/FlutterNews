@@ -43,8 +43,9 @@ class NewsItem extends StatelessWidget {
                   fontSize: 14.0,
                 ),
               ),
+              const Padding(padding: EdgeInsets.only(bottom: 8.0)),
               Text(
-                item.publishedAt == null ? "" : convertDate(item.publishedAt),
+                item.publishedAt == null ? "" : item.publishedAt,
                 maxLines: 2,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -55,6 +56,4 @@ class NewsItem extends StatelessWidget {
           )
         ]));
   }
-
-  convertDate(String publishedAt) {}
 }
