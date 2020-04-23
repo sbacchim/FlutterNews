@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:simonews/screens/fav_news.dart';
 import 'package:simonews/screens/news.dart';
 import 'package:simonews/screens/news_detail.dart';
-import 'package:simonews/screens/search_news.dart';
 
 import 'models/news_repo.dart';
 
@@ -27,7 +25,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => News(),
-//          '/detail': (context) => NewsDetail(),
+          '/detail': (context) => NewsDetail(),
 //          '/search': (context) => SearchNews(),
 //          '/fav': (context) => FavNews(),
         },

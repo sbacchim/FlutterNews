@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simonews/components/news_item.dart';
-import 'package:simonews/models/article.dart';
 import 'package:simonews/models/news_repo.dart';
+import 'package:simonews/services/api.dart';
 
 class News extends StatefulWidget {
   News({Key key}) : super(key: key);
@@ -10,18 +10,21 @@ class News extends StatefulWidget {
   _NewsState createState() => _NewsState();
 }
 
-class _NewsState extends State<News> {
-  PageController _pageController;
+class _NewsState extends State<News> with TickerProviderStateMixin {
+  TabController _controller;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _controller = TabController(length: 7, vsync: this);
+    _controller.addListener(() {
+      _onTabClick();
+    });
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -40,6 +43,7 @@ class _NewsState extends State<News> {
                   style: TextStyle(fontSize: 16.0, color: Colors.grey),
                 ),
                 bottom: TabBar(
+                    controller: _controller,
                     isScrollable: true,
                     unselectedLabelColor: Colors.grey,
                     labelColor: Colors.grey,
@@ -55,45 +59,15 @@ class _NewsState extends State<News> {
                     ]),
               ),
               body: TabBarView(
+                controller: _controller,
                 children: <Widget>[
-                  Container(
-                    child: Center(
-                        child: ListView.builder(
-                      itemBuilder: (context, index) =>
-                          NewsItem((news.articles[index]) as Article),
-                      itemCount: (news.articles as List).length,
-                    )),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text('Tab 2'),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text('Tab 3'),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text('Tab 4'),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text('Tab 5'),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text('Tab 6'),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text('Tab 7'),
-                    ),
-                  )
+                  Container(child: getItem("")),
+                  Container(child: getItem("business")),
+                  Container(child: getItem("entertainment")),
+                  Container(child: getItem("health")),
+                  Container(child: getItem("science")),
+                  Container(child: getItem("technology")),
+                  Container(child: getItem("sports")),
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(items: [
@@ -103,5 +77,57 @@ class _NewsState extends State<News> {
                     icon: Icon(Icons.star_border), title: Text("Segui"))
               ])));
     });
+  }
+
+  void _onTabClick() async {
+    switch (_controller.index) {
+      case 0:
+        await Api().getArticles();
+        break;
+      case 1:
+        await Api()
+            .getArticlesByCategory(context: context, category: "business");
+        break;
+      case 2:
+        await Api()
+            .getArticlesByCategory(context: context, category: "entertainment");
+        break;
+      case 3:
+        await Api().getArticlesByCategory(context: context, category: "health");
+        break;
+      case 4:
+        await Api()
+            .getArticlesByCategory(context: context, category: "science");
+        break;
+      case 5:
+        await Api()
+            .getArticlesByCategory(context: context, category: "technology");
+        break;
+      case 6:
+        await Api().getArticlesByCategory(context: context, category: "sports");
+        break;
+    }
+  }
+
+  Center getItem(String category) {
+    return Center(
+        child: RefreshIndicator(
+            onRefresh: () => _refresh(context, category),
+            child: Consumer<NewsRepo>(builder: (context, holder, child) {
+              return ListView.builder(
+                  itemCount: holder.getArticlesByCategory(category) == null
+                      ? 0
+                      : holder.getArticlesByCategory(category).length,
+                  itemBuilder: (context, position) => NewsItem(
+                      holder.getArticlesByCategory(category)[position]));
+            })));
+  }
+
+  Future<bool> _refresh(BuildContext context, String category) async {
+    if (category == null)
+      await Api().getArticles();
+    else
+      await Api().getArticlesByCategory(context: context, category: category);
+    return true;
   }
 }

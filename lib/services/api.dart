@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:simonews/models/article.dart';
+import 'package:simonews/models/news_repo.dart';
 
 const String BASE_URL = "http://newsapi.org/v2";
 const String HEADLINES = "/top-headlines";
@@ -26,5 +30,21 @@ class Api {
     return parsed['articles']
         .map<Article>((json) => Article.fromJson(json))
         .toList();
+  }
+
+  Future<void> getArticlesByCategory(
+      {@required BuildContext context, String category}) async {
+    var articlesHolder = Provider.of<NewsRepo>(context, listen: false);
+    var client = http.Client();
+    String _category = '&category=' + category;
+    final response = await client.get(BASE_URL +
+        HEADLINES +
+        "?country=" +
+        COUNTRY +
+        (_category.isEmpty ? "" : _category) +
+        "&apiKey=" +
+        API_KEY);
+    List<Article> articles = await compute(_parseArticle, response.body);
+    articlesHolder.addToMap(category, articles);
   }
 }
