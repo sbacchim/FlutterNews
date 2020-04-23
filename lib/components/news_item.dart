@@ -18,15 +18,19 @@ class NewsItem extends StatelessWidget {
               elevation: 2,
               child: Container(
                   width: 600,
+                  height: 300,
                   child: Image(
                       image: NetworkImage(
                           item.urlToImage == null ? "" : item.urlToImage),
                       fit: BoxFit.fitWidth))),
-          Column(
+          Container(
+            width: 600,
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Padding(padding: EdgeInsets.all(16),),
               Text(
-                item.author == null ? "" : item.author,
+                item.source == null ? "" : item.source,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -53,7 +57,7 @@ class NewsItem extends StatelessWidget {
                 ),
               )
             ],
-          )
+          ))
         ]));
   }
 }
