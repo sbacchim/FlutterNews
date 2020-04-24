@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simonews/models/news_repo.dart';
 import 'package:simonews/services/api.dart';
+import 'package:simonews/theme/theme.dart';
 
 import 'news_item.dart';
 
@@ -39,7 +40,7 @@ class SearchNews extends SearchDelegate<String> {
 
     return Consumer<NewsRepo>(builder: (context, holder, child) {
       return ListView.builder(
-          itemCount: query.isNotEmpty ? 0 : holder.getSearched(query).length,
+          itemCount: query.isEmpty ? 0 : holder.getSearched(query).length,
           itemBuilder: (context, position) =>
               NewsItem(holder.getSearched(query)[position]));
     });
@@ -55,7 +56,7 @@ class SearchNews extends SearchDelegate<String> {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context);
+    return searchTheme;
   }
 
   void _search(BuildContext context, String search) async {

@@ -81,7 +81,10 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
                     icon: Icon(Icons.language), title: Text("Notizie")),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.star_border), title: Text("Segui"))
-              ])));
+              ], onTap: (i) {
+                if (i == 1)
+                  Navigator.pushNamed(context, "/fav");
+              })));
     });
   }
 

@@ -71,8 +71,10 @@ class Api {
     var articlesHolder = Provider.of<NewsRepo>(context, listen: false);
     String _search = '?q=' + search;
 
-    String url =
-        HEADLINES + (search.isEmpty ? "" : _search) + "&apiKey=" + API_KEY;
+    String url = HEADLINES +
+        (search.isEmpty ? "" : _search) +
+        "&apiKey=" +
+        API_KEY;
 
     Response response = await dio.get(url);
 

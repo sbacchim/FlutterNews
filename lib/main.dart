@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:simonews/screens/fav_news.dart';
 import 'package:simonews/screens/news.dart';
 import 'package:simonews/screens/news_detail.dart';
+import 'package:simonews/theme/theme.dart';
 
 import 'models/news_repo.dart';
 
@@ -16,14 +18,14 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => NewsRepo(),
       child: MaterialApp(
-        theme: ThemeData(fontFamily: 'Roboto', brightness: Brightness.light),
+        theme: appTheme,
         debugShowCheckedModeBanner: false,
         title: 'SimoNews',
         initialRoute: '/',
         routes: {
           '/': (context) => News(),
           '/detail': (context) => NewsDetail(),
-//          '/fav': (context) => FavNews(),
+          '/fav': (context) => FavNews(),
         },
       ),
     );
