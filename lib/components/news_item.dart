@@ -15,12 +15,12 @@ class NewsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () {
-          kIsWeb ? openNewsUrl(item.url) : _openNewsDetail(context);
-        },
-        child: Container(
-            margin: EdgeInsets.all(8),
+    return Container(
+        margin: EdgeInsets.fromLTRB(4, 0, 4, 4),
+        child: InkWell(
+            onTap: () {
+              kIsWeb ? openNewsUrl(item.url) : _openNewsDetail(context);
+            },
             child: Column(children: <Widget>[
               Card(
                   shape: RoundedRectangleBorder(
@@ -28,12 +28,15 @@ class NewsItem extends StatelessWidget {
                   margin: EdgeInsets.all(16),
                   elevation: 2,
                   child: Container(
-                      width: 600,
-                      height: 300,
-                      child: Image(
-                          image: NetworkImage(
-                              item.urlToImage == null ? "" : item.urlToImage),
-                          fit: BoxFit.fitHeight))),
+                      width: 350,
+                      height: 220,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image(
+                              image: NetworkImage(item.urlToImage == null
+                                  ? ""
+                                  : item.urlToImage),
+                              fit: BoxFit.fitHeight)))),
               Container(
                   padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
                   width: 600,
@@ -67,9 +70,16 @@ class NewsItem extends StatelessWidget {
                           fontWeight: FontWeight.normal,
                           fontSize: 12.0,
                         ),
-                      )
+                      ),
+                      const Padding(padding: EdgeInsets.only(bottom: 8.0))
                     ],
-                  ))
+                  )),
+              Divider(
+                  color: Colors.grey[70],
+                  thickness: 1,
+                  height: 8.0,
+                  indent: 4.0,
+                  endIndent: 4.0)
             ])));
   }
 
