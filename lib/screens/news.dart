@@ -4,6 +4,8 @@ import 'package:simonews/components/news_item.dart';
 import 'package:simonews/models/news_repo.dart';
 import 'package:simonews/services/api.dart';
 
+import 'file:///C:/Users/simoneb/Desktop/CorsoFlutter/simo_news/lib/components/search_news.dart';
+
 class News extends StatefulWidget {
   News({Key key}) : super(key: key);
 
@@ -37,7 +39,11 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 centerTitle: true,
-                leading: Icon(Icons.search, color: Colors.grey),
+                leading: IconButton(
+                    icon: Icon(Icons.search, color: Colors.grey),
+                    onPressed: () {
+                      showSearch(context: context, delegate: SearchNews());
+                    }),
                 title: Text(
                   'SimoNews',
                   style: TextStyle(fontSize: 16.0, color: Colors.grey),

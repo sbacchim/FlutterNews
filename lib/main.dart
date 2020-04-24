@@ -16,17 +16,13 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => NewsRepo(),
       child: MaterialApp(
-        theme: ThemeData(
-          fontFamily: 'Roboto',
-            brightness: Brightness.light
-        ),
+        theme: ThemeData(fontFamily: 'Roboto', brightness: Brightness.light),
         debugShowCheckedModeBanner: false,
         title: 'SimoNews',
         initialRoute: '/',
         routes: {
           '/': (context) => News(),
           '/detail': (context) => NewsDetail(),
-//          '/search': (context) => SearchNews(),
 //          '/fav': (context) => FavNews(),
         },
       ),

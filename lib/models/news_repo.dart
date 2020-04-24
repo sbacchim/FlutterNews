@@ -6,7 +6,7 @@ import 'article.dart';
 class NewsRepo extends ChangeNotifier {
   final List<Article> _articles = [];
   final Map<String, List<Article>> _articlesMap = Map();
-  final List<Article> _favourites = [];
+  final List<Article> _searched = List();
   Article _selected;
 
   NewsRepo() {
@@ -35,10 +35,22 @@ class NewsRepo extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addResults(List<Article> news) {
+    assert(news != null);
+    _searched.clear();
+    _searched.addAll(news);
+    notifyListeners();
+  }
+
+
   List<Article> getArticlesByCategory(String category) {
     if (category.isEmpty)
       return articles;
     else
       return _articlesMap[category] == null ? List() : _articlesMap[category];
   }
+
+  List<Article> getSearched(String query) => _searched;
+
+  void clearSearch() => _searched.clear();
 }

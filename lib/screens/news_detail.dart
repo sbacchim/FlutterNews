@@ -53,7 +53,7 @@ class _NewsDetailState extends State<NewsDetail> {
                 onPressed: () {
                   Share.share('Condividi\n${article.url}');
                 }),
-            IconButton(icon: Icon(Icons.add))
+            IconButton(icon: Icon(Icons.add), onPressed: () {})
           ],
         )));
   }

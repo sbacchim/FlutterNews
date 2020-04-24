@@ -47,4 +47,14 @@ class Api {
     List<Article> articles = await compute(_parseArticle, response.body);
     articlesHolder.addToMap(category, articles);
   }
+
+  searchArticles({BuildContext context, String search}) async {
+    var articlesHolder = Provider.of<NewsRepo>(context, listen: false);
+    var client = http.Client();
+    String _search = '?q=' + search;
+    final response = await client
+        .get(BASE_URL + HEADLINES + (search.isEmpty ? "" : _search) + "&apiKey=" + API_KEY);
+    List<Article> news = await compute(_parseArticle, response.body);
+    articlesHolder.addResults(news);
+  }
 }
