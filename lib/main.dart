@@ -7,9 +7,8 @@ import 'package:simonews/screens/fav_news.dart';
 import 'package:simonews/screens/news.dart';
 import 'package:simonews/screens/news_detail.dart';
 import 'package:simonews/theme/theme.dart';
-import 'package:simonews/services//db_repo.dart';
 
-import 'models/news_repo.dart';
+import 'bloc/news_bloc.dart';
 
 const String newsBox = "newsBox";
 
@@ -24,17 +23,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Using MultiProvider is convenient when providing multiple objects.
-    return ChangeNotifierProvider(
-      create: (context) => NewsRepo(),
+    return MultiProvider(
+      providers: [
+        Provider<NewsBloc>(create: (_) => NewsBloc()),
+      ],
       child: MaterialApp(
-        theme: appTheme,
         debugShowCheckedModeBanner: false,
         title: 'SimoNews',
+        theme: appTheme,
         initialRoute: '/',
         routes: {
           '/': (context) => News(),
           '/detail': (context) => NewsDetail(),
-          '/fav': (context) => FavNews(),
+          '/fab': (context) => FavNews(),
         },
       ),
     );

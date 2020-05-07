@@ -49,9 +49,7 @@ class Api {
         .toList();
   }
 
-  Future<void> getArticlesByCategory(
-      {@required BuildContext context, String category}) async {
-    var articlesHolder = Provider.of<NewsRepo>(context, listen: false);
+  Future<List<Article>> getArticlesByCategory({String category}) async {
     String _category = '&category=' + category;
     String url = BASE_URL +
         HEADLINES +
@@ -61,10 +59,9 @@ class Api {
         "&apiKey=" +
         API_KEY;
     Response response = await dio.get(url);
-    List<Article> articles = await response.data['articles']
+    return await response.data['articles']
         .map<Article>((json) => Article.fromJson(json))
         .toList();
-    articlesHolder.addToMap(category, articles);
   }
 
   searchArticles({BuildContext context, String search}) async {

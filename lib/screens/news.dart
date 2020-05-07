@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:simonews/bloc/news_bloc.dart';
 import 'package:simonews/components/news_item.dart';
 import 'package:simonews/components/search_news.dart';
+import 'package:simonews/models/article.dart';
 import 'package:simonews/models/news_repo.dart';
-import 'package:simonews/services/api.dart';
 import 'package:simonews/services/db_repo.dart';
 
 DbRepository _dbRepo = DbRepository();
@@ -23,6 +24,8 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
     _dbRepo.watch().forEach((element) {
       print("Update");
     });
+    final bloc = Provider.of<NewsBloc>(context, listen: false);
+    bloc.getNews();
     _controller = TabController(length: 7, vsync: this);
     _controller.addListener(() {
       _onTabClick();
@@ -95,54 +98,27 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
   }
 
   void _onTabClick() async {
-    switch (_controller.index) {
-      case 0:
-        await Api().getArticles();
-        break;
-      case 1:
-        await Api()
-            .getArticlesByCategory(context: context, category: "business");
-        break;
-      case 2:
-        await Api()
-            .getArticlesByCategory(context: context, category: "entertainment");
-        break;
-      case 3:
-        await Api().getArticlesByCategory(context: context, category: "health");
-        break;
-      case 4:
-        await Api()
-            .getArticlesByCategory(context: context, category: "science");
-        break;
-      case 5:
-        await Api()
-            .getArticlesByCategory(context: context, category: "technology");
-        break;
-      case 6:
-        await Api().getArticlesByCategory(context: context, category: "sports");
-        break;
+    if (!_controller.indexIsChanging) {
+      final bloc = Provider.of<NewsBloc>(context, listen: false);
+      bloc.changeCategory(_controller.index);
     }
   }
 
   Center getItem(String category) {
+    final bloc = Provider.of<NewsBloc>(context, listen: false);
+    bloc.getNews();
     return Center(
         child: RefreshIndicator(
-            onRefresh: () => _refresh(context, category),
-            child: Consumer<NewsRepo>(builder: (context, holder, child) {
-              return ListView.builder(
-                  itemCount: holder.getArticlesByCategory(category) == null
-                      ? 0
-                      : holder.getArticlesByCategory(category).length,
-                  itemBuilder: (context, position) => NewsItem(
-                      holder.getArticlesByCategory(category)[position]));
-            })));
-  }
-
-  Future<bool> _refresh(BuildContext context, String category) async {
-    if (category == null)
-      await Api().getArticles();
-    else
-      await Api().getArticlesByCategory(context: context, category: category);
-    return true;
+            onRefresh: () => bloc.refresh(_controller.index),
+            child: StreamBuilder<List<Article>>(
+                stream: bloc.articles,
+                builder: (context, AsyncSnapshot<List<Article>> snapshot) {
+                  return (snapshot.hasData
+                      ? ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, position) =>
+                              NewsItem(snapshot.data[position]))
+                      : Center(child: CircularProgressIndicator()));
+                })));
   }
 }
