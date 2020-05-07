@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:simonews/components/news_item.dart';
 import 'package:simonews/components/search_news.dart';
+import 'package:simonews/models/news_repo.dart';
+import 'package:simonews/services/db_repo.dart';
 
 class FavNews extends StatelessWidget {
   @override
@@ -17,17 +21,29 @@ class FavNews extends StatelessWidget {
               'SimoNews',
               style: TextStyle(fontSize: 16.0, color: Colors.grey),
             )),
-        body: Container(),
+        body: getItems(),
         bottomNavigationBar: BottomNavigationBar(
             items: [
               BottomNavigationBarItem(
                   icon: Icon(Icons.language), title: Text("Notizie")),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.star_border),
-                  title: Text("Segui"))
+                  icon: Icon(Icons.star_border), title: Text("Segui"))
             ],
             onTap: (i) {
               if (i == 0) Navigator.pushNamed(context, "/");
             }));
+  }
+
+  Center getItems() {
+    DbRepository dbRepository = DbRepository();
+
+    return Center(child: Consumer<NewsRepo>(builder: (context, holder, child) {
+      return ListView.builder(
+          itemCount: dbRepository.getArticles() == null
+              ? 0
+              : dbRepository.getArticles().length,
+          itemBuilder: (context, position) =>
+              NewsItem(dbRepository.getArticles()[position]));
+    }));
   }
 }

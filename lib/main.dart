@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:simonews/models/article.dart';
 import 'package:simonews/screens/fav_news.dart';
 import 'package:simonews/screens/news.dart';
 import 'package:simonews/screens/news_detail.dart';
 import 'package:simonews/theme/theme.dart';
+import 'package:simonews/services//db_repo.dart';
 
 import 'models/news_repo.dart';
 
-void main() {
+const String newsBox = "newsBox";
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(ArticleAdapter());
+  await Hive.openBox<Article>(newsBox);
   runApp(MyApp());
 }
 

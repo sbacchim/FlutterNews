@@ -24,12 +24,19 @@ dependencies:
   dio: ^3.0.9
   dio_flutter_transformer: ^3.0.2
   dio_http_cache: ^0.2.6
+  cached_network_image: ^2.1.0+1
+  hive: ^1.4.1+1
+  hive_flutter: ^0.3.0+2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator: ^0.7.0+2
+  build_runner: ^1.9.0
 
 flutter:
-
+  assets:
+    - assets/NY.jpg
+    - assets/fuji.jpg
   uses-material-design: true
 

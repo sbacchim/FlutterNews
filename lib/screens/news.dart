@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simonews/components/news_item.dart';
+import 'package:simonews/components/search_news.dart';
 import 'package:simonews/models/news_repo.dart';
 import 'package:simonews/services/api.dart';
+import 'package:simonews/services/db_repo.dart';
 
-import 'file:///C:/Users/simoneb/Desktop/CorsoFlutter/simo_news/lib/components/search_news.dart';
+DbRepository _dbRepo = DbRepository();
 
 class News extends StatefulWidget {
   News({Key key}) : super(key: key);
@@ -18,6 +20,9 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _dbRepo.watch().forEach((element) {
+      print("Update");
+    });
     _controller = TabController(length: 7, vsync: this);
     _controller.addListener(() {
       _onTabClick();
@@ -76,15 +81,16 @@ class _NewsState extends State<News> with TickerProviderStateMixin {
                   Container(child: getItem("sports")),
                 ],
               ),
-              bottomNavigationBar: BottomNavigationBar(items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.language), title: Text("Notizie")),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.star_border), title: Text("Segui"))
-              ], onTap: (i) {
-                if (i == 1)
-                  Navigator.pushNamed(context, "/fav");
-              })));
+              bottomNavigationBar: BottomNavigationBar(
+                  items: [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.language), title: Text("Notizie")),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.star_border), title: Text("Segui"))
+                  ],
+                  onTap: (i) {
+                    if (i == 1) Navigator.pushNamed(context, "/fav");
+                  })));
     });
   }
 
